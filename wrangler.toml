@@ -1,0 +1,13 @@
+name = "viciphone-proxy"
+main = "src/index.js"
+compatibility_date = "2026-01-20"
+workers_dev = true
+
+[vars]
+# Upstream HTTPS origin where PHP app is deployed (e.g., your DigitalOcean App URL)
+UPSTREAM_ORIGIN = "https://viciphone.vicloudservices.co"
+
+# Optional: set a custom route when binding to your domain
+# routes = [
+#   { pattern = "phone.example.com/*", zone_name = "example.com" }
+# ]
