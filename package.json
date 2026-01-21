@@ -4,8 +4,8 @@
   "description": "Node/Express port of VICIphone PHP endpoints",
   "type": "module",
   "scripts": {
-    "start": "node server/index.js",
-    "dev": "node server/index.js"
+    "start": "node src/index.js",
+    "dev": "node src/index.js"
   },
   "dependencies": {
     "ejs": "^3.1.10",
