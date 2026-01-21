@@ -3,11 +3,6 @@
   "builds": [
     { "src": "api/[...all].js", "use": "@vercel/node" }
   ],
-  "functions": {
-    "api/[...all].js": {
-      "runtime": "nodejs24.x"
-    }
-  },
   "routes": [
     { "src": "/api/(.*)", "dest": "/api/$1" },
     { "src": "/", "dest": "/api/viciphone" },
