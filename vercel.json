@@ -1,12 +1,11 @@
 {
-  "functions": {
-    "api/[...all].js": {
-      "runtime": "nodejs18.x"
-    }
-  },
-  "rewrites": [
-    { "source": "/api/(.*)", "destination": "/api/$1" },
-    { "source": "/", "destination": "/api/viciphone" },
-    { "source": "/(.*)", "destination": "/api/$1" }
+  "version": 2,
+  "builds": [
+    { "src": "api/[...all].js", "use": "@vercel/node" }
+  ],
+  "routes": [
+    { "src": "/api/(.*)", "dest": "/api/$1" },
+    { "src": "/", "dest": "/api/viciphone" },
+    { "src": "/(.*)", "dest": "/api/$1" }
   ]
 }
