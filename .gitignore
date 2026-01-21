@@ -1,0 +1,50 @@
+# Node
+node_modules/
+.npmrc
+npm-debug.log*
+package-lock.json
+
+# Env / secrets
+.env
+.env.*
+*.local
+
+# Logs
+logs/
+*.log
+*.log.*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Coverage / build outputs
+coverage/
+dist/
+build/
+.tmp/
+.tmp*/
+
+# Editors/OS
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Runtime/cache
+.cache/
+.next/
+.svelte-kit/
+
+# Cloud/hosting
+.vercel/
+.netlify/
+.wrangler/
+
+# PHP specific
+Source/debug/*.log
+composer.lock
+vendor/
+
+# Misc
+*.swp
+*.swo
