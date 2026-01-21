@@ -1,6 +1,6 @@
 import { createApp } from '../server/app.js';
 
-// Single app instance reused across invocations
+// Reuse a single Express app instance across invocations
 const app = createApp();
 
 export const config = {
@@ -10,18 +10,9 @@ export const config = {
 };
 
 export default function handler(req, res) {
-  // Strip the /api prefix so Express routes match (/viciphone, /vp_interpreter, etc.)
+  // Strip the /api prefix so the Express routes match
   if (req.url && req.url.startsWith('/api')) {
     req.url = req.url.substring(4) || '/';
   }
   return app(req, res);
-}
-import serverless from 'serverless-http';
-import { createApp } from '../server/app.js';
-
-const app = createApp();
-const handler = serverless(app);
-
-export default async function(req, res) {
-  return handler(req, res);
 }
