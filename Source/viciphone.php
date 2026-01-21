@@ -73,17 +73,17 @@ if ( $debug_access_log ) {
 }
 
 // Encryption Check
-$is_https = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
-	|| (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443)
-	|| (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https');
-if ( ! $is_https ) {
-	// Connection is not https
-	// Throw and Alert and exit
-	echo "<script language='javascript'>";
-	echo "alert('Connection is not encrypted. VICIphone cannot load without encryption. Please make sure you are using the correct URL.')";
-	echo "</script>";
-	exit;
-}
+// $is_https = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+// 	|| (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443)
+// 	|| (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https');
+// if ( ! $is_https ) {
+// 	// Connection is not https
+// 	// Throw and Alert and exit
+// 	echo "<script language='javascript'>";
+// 	echo "alert('Connection is not encrypted. VICIphone cannot load without encryption. Please make sure you are using the correct URL.')";
+// 	echo "</script>";
+// 	exit;
+// }
 
 
 // whether debug should be enabled
