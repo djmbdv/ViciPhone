@@ -24,10 +24,10 @@
 <html>
 	<head>
 		<title>Vicidial Web Phone</title>
-		<link rel="stylesheet" href="<?php echo $layout; ?>" />
-		<meta http-equiv=”Pragma” content=”no-cache”>
-		<meta http-equiv=”Expires” content=”-1″>
-		<meta http-equiv=”CACHE-CONTROL” content=”NO-CACHE”>
+		<link rel="stylesheet" href="<?php echo htmlspecialchars($layout, ENT_QUOTES, 'UTF-8'); ?>" />
+		<meta http-equiv="Pragma" content="no-cache">
+		<meta http-equiv="Expires" content="-1">
+		<meta http-equiv="CACHE-CONTROL" content="NO-CACHE">
 	</head>
 	<body>
 		<!-- Container -->
@@ -105,23 +105,23 @@
 		<script>
 		
 		// SIP configuration variables
-		var cid_name = '<?php echo $cid_name; ?>';
-		var sip_uri = '<?php echo $sip_uri; ?>';
-		var auth_user = '<?php echo $auth_user; ?>';
-		var password = '<?php echo $password; ?>';
-		var ws_server = '<?php echo $ws_server; ?>';
+		var cid_name = <?php echo json_encode($cid_name); ?>;
+		var sip_uri = <?php echo json_encode($sip_uri); ?>;
+		var auth_user = <?php echo json_encode($auth_user); ?>;
+		var password = <?php echo json_encode($password); ?>;
+		var ws_server = <?php echo json_encode($ws_server); ?>;
 
 		// whether debug should be enabled
-		var debug_enabled = '<?php echo $debug_enabled; ?>';
+		var debug_enabled = <?php echo json_encode($debug_enabled); ?>;
 
 		// display restriction options
-		var hide_dialpad = '<?php echo $hide_dialpad; ?>';
-		var hide_dialbox = '<?php echo $hide_dialbox; ?>';
-		var hide_mute = '<?php echo $hide_mute; ?>';
-		var hide_volume = '<?php echo $hide_volume; ?>';
+		var hide_dialpad = <?php echo json_encode($hide_dialpad); ?>;
+		var hide_dialbox = <?php echo json_encode($hide_dialbox); ?>;
+		var hide_mute = <?php echo json_encode($hide_mute); ?>;
+		var hide_volume = <?php echo json_encode($hide_volume); ?>;
 
 		// behavior options
-		var auto_answer = '<?php echo $auto_answer; ?>';;
+		var auto_answer = <?php echo json_encode($auto_answer); ?>;
 		</script>
 
 		<!-- WebRTC adapter -->

@@ -3,91 +3,86 @@
 // Enable to enable the debug access log 
 $debug_access_log = true;
 
+function get_param($key) {
+	$value = filter_input(INPUT_GET, $key, FILTER_UNSAFE_RAW);
+	if ($value === null) {
+		$value = filter_input(INPUT_POST, $key, FILTER_UNSAFE_RAW);
+	}
+	return $value ?? '';
+}
+
+function decode_base64_value($value) {
+	if ($value === null || $value === '') {
+		return '';
+	}
+	$decoded = base64_decode($value, true);
+	if ($decoded === false) {
+		return '';
+	}
+	return trim($decoded);
+}
+
 // GET / POST Options
 // the phone login used as the auth_user
-if (isset($_GET["phone_login"])) {
-	$phone_login=$_GET["phone_login"];
-} elseif (isset($_POST["phone_login"])) {
-	$phone_login=$_POST["phone_login"];
-}
+$phone_login = decode_base64_value(get_param('phone_login'));
 
 // the phone registration password
-if (isset($_GET["phone_pass"])) {
-	$phone_pass=$_GET["phone_pass"];
-} elseif (isset($_POST["phone_pass"])) {
-	$phone_pass=$_POST["phone_pass"];
-}
+$phone_pass = decode_base64_value(get_param('phone_pass'));
 
 // the server IP to register to
-if (isset($_GET["server_ip"])) {
-	$server_ip=$_GET["server_ip"];
-} elseif (isset($_POST["server_ip"])) {
-	$server_ip=$_POST["server_ip"];
-}
+$server_ip = decode_base64_value(get_param('server_ip'));
 
 // the audio codecs to use ( currently not supported )
-if (isset($_GET["codecs"])) {
-	$codecs=$_GET["codecs"];
-} elseif (isset($_POST["codecs"])) {
-	$codecs=$_POST["codecs"];
-}
+$codecs = decode_base64_value(get_param('codecs'));
 
 // additional webphone options
-if (isset($_GET["options"])) {
-	$options=$_GET["options"];
-} elseif (isset($_POST["options"])) { 
-	$options=$_POST["options"];
-}
-
-// decode the GET/POST data
-$phone_login =              base64_decode($phone_login);
-$phone_pass =               base64_decode($phone_pass);
-$server_ip =                base64_decode($server_ip);
-$codecs =                   base64_decode($codecs);
-$options =                  base64_decode($options);
+$options = decode_base64_value(get_param('options'));
 
 // Encryption check
 // Get remote address
-$referring_url = "https://viciphone.com";
-if (!empty($_SERVER['HTTP_REFERER'])) {
-	$referring_url = $_SERVER['HTTP_REFERER'];
+$referring_url = filter_var($_SERVER['HTTP_REFERER'] ?? 'https://viciphone.com', FILTER_UNSAFE_RAW);
+$ref_url_array = parse_url($referring_url);
+if (!is_array($ref_url_array)) {
+	$ref_url_array = [];
 }
-$ref_url_array = parse_url( $referring_url );
 
 // Do not include 
 // user / pass / port / get / post 
 // data in the URL that is logged or displayed
-$base_referring_url = $ref_url_array['scheme'] . "://" . $ref_url_array['host'] . $ref_url_array['path'];
+$ref_scheme = $ref_url_array['scheme'] ?? '';
+$ref_host = $ref_url_array['host'] ?? '';
+$ref_path = $ref_url_array['path'] ?? '';
+$base_referring_url = ($ref_scheme && $ref_host) ? $ref_scheme . '://' . $ref_host . $ref_path : $referring_url;
 
 // Create the debug log string
-$log_string = date("Y-m-d H:i:s");
-$log_string .= "\t";
-if (!empty($_SERVER['REMOTE_ADDR'])) {
-	$log_string .= $_SERVER['REMOTE_ADDR'];
+$log_parts = [date("Y-m-d H:i:s")];
+$log_parts[] = $_SERVER['REMOTE_ADDR'] ?? '';
+$log_parts[] = $base_referring_url;
+$log_parts[] = $_SERVER['HTTP_USER_AGENT'] ?? '';
+$browser_info = get_browser(null, true);
+if (is_array($browser_info)) {
+	$log_parts[] = json_encode($browser_info);
+} else {
+	$log_parts[] = '';
 }
-$log_string .= "\t";
-$log_string .= $base_referring_url;
-$log_string .= "\t";
-if (!empty($_SERVER['HTTP_USER_AGENT'])) {
-	$log_string .= $_SERVER['HTTP_USER_AGENT'];
-}
-$log_string .= "\t";
-$log_string .= get_browser(null,true);
-$log_string .= "\n";
+$log_string = implode("\t", $log_parts) . "\n";
 
 if ( $debug_access_log ) {
 	// log it
-	file_put_contents( "debug/viciphone_access.log",$log_string,FILE_APPEND );
+	file_put_contents( "debug/viciphone_access.log", $log_string, FILE_APPEND | LOCK_EX );
 }
 
 // Encryption Check
-if ( $ref_url_array['scheme'] != 'https' ) {
-        // Remote address is not https
-        // Throw and Alert and exit
-        echo "<script language='javascript'>";
-        echo "alert('Referring URL ( $base_referring_url ) is not encrypted. VICIphone cannot load without encryption. Please make sure you are using the correct URL.')";
-        echo "</script>";
-        exit;
+$is_https = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+	|| (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443)
+	|| (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https');
+if ( ! $is_https ) {
+	// Connection is not https
+	// Throw and Alert and exit
+	echo "<script language='javascript'>";
+	echo "alert('Connection is not encrypted. VICIphone cannot load without encryption. Please make sure you are using the correct URL.')";
+	echo "</script>";
+	exit;
 }
 
 
@@ -157,6 +152,7 @@ foreach( $options_array as $value ) {
 		$ws_server = str_replace( 'WEBSOCKETURL', '', $ws_server );
 	}
 }
+$ws_server = filter_var($ws_server, FILTER_SANITIZE_URL);
 
 // Layout file handling
 $layout = '';
@@ -189,6 +185,7 @@ if ( $layout == '' ) {
 }
 # sanitize the layout to try to prevent XSS
 $layout = filter_var($layout, FILTER_SANITIZE_URL );
+$layout = str_replace(array("\r", "\n"), '', $layout);
 
 // call the template
 require_once('vp_template.php');
