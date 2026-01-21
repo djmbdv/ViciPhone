@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    { "source": "/", "destination": "/api/viciphone" },
+    { "source": "/viciphone", "destination": "/api/viciphone" },
+    { "source": "/vp_interpreter", "destination": "/api/vp_interpreter" },
+    { "source": "/vp_int_example", "destination": "/api/vp_int_example" }
+  ]
+}
