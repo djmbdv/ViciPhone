@@ -4,7 +4,7 @@
   "description": "Node/Express port of VICIphone PHP endpoints",
   "type": "module",
   "engines": {
-    "node": "18.x"
+    "node": "24.x"
   },
   "scripts": {
     "start": "node server/index.js",
