@@ -40,7 +40,7 @@ $options = decode_base64_value(get_param('options'));
 
 // Encryption check
 // Get remote address
-$referring_url = filter_var($_SERVER['HTTP_REFERER'] ?? 'https://viciphone.com', FILTER_UNSAFE_RAW);
+$referring_url = filter_var($_SERVER['HTTP_REFERER'] ?? 'https://phone.vicloudservices.co', FILTER_UNSAFE_RAW);
 $ref_url_array = parse_url($referring_url);
 if (!is_array($ref_url_array)) {
 	$ref_url_array = [];
